@@ -6,6 +6,7 @@ import Explorar from "./Routes/Explorar.jsx";
 import Video from "./Routes/Video.jsx";
 import Admin from "./Routes/Admin.jsx";
 import NotFound from "./Routes/NotFound.jsx";
+import Assinatura from "./Routes/Assinatura.jsx";
 
 import App from "./App.jsx";
 import {
@@ -16,10 +17,6 @@ import {
   Navigate
 } from "react-router-dom";
 
-// Components (placeholders por enquanto)
-const Assinatura = () => <h1>Planos e Pagamentos</h1>;
-
-const Perfil = () => <></>
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,7 +24,6 @@ const router = createBrowserRouter(
       <Route index element={<Explorar />} />
       <Route path="video/:id" element={<Video />} />
       <Route path="checkout" element={<Assinatura />} />
-      <Route path="perfil" element={<Perfil />} />
       <Route path="admin" element={<Admin />} />
       <Route path="*" element={<NotFound />} />
     </Route>  

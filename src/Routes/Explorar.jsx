@@ -1,22 +1,31 @@
 import image1 from "../assets/image-1.jpg";
-import Data from "../Data.js";
 import { Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Explorar() {
 	const [move, setMove] = useState(false);
-
+	const [dados, setDados] = useState([]);
 	const [path, setPath] = useState("/video/");
 
 	const clickBtnHandler = () => {
-		console.log("Button clicked, navigating to:", path);
 		setMove((move) => !move);
 	};
 
-	let data = [];
-	for (let i of Object.keys(Data())) {
-		data.push(Data()[i]);
-	}
+	useEffect(() => {
+		fetch("http://127.0.0.1:3000")
+			.then((response) => response.json())
+			.then((data) => {
+				let tempdata = [];
+				for (let i of Object.keys(data)) {
+					tempdata.push(data[i]);
+				}
+				setDados(tempdata);
+				console.log("Data fetched successfully:", tempdata);
+			})
+			.catch((error) => {
+				console.error("Error fetching data:", error);
+			});
+	}, []);
 
 	if (move) {
 		return (
@@ -30,13 +39,13 @@ function Explorar() {
 	return (
 		<div className="flex flex-col items-center border border-gray-200 justify-center">
 			<div className="grid w-full grid-cols-1 lg:grid-cols-3 gap-6 p-10 px-6 md:px-19">
-				{Object.keys(Data()).map((key) => (
+				{dados.map((item, key) => (
 					<div
 						onClick={() => {
-							setPath("/video/" + Data()[key].id);
+							setPath("/video/" + item.post_id);
 							clickBtnHandler();
 						}}
-						key={Math.floor(Math.random() * 10) + key}
+						key={Math.floor(Math.random() * 100) + key}
 						className="w-full bg-gray-50 border border-gray-200 aspect-auto overflow-hidden rounded-xl video-card ">
 						<div className="image overflow-hidden">
 							<img
@@ -47,18 +56,18 @@ function Explorar() {
 						<div>
 							<div className="flex items-baseline gap-4 p-4">
 								<div className="creator-profile rounded-md bg-gray-500 flex justify-center items-center aspect-square w-9 font-medium text-white">
-									{Data()[key].channelName[0]}
+									{item.channel_name[0]}
 								</div>
 
 								<div>
 									<div className="text-gray-800">
 										<div className="flex items-center gap-2">
 											<p className="font-medium">
-												{Data()[key].title}
+												{item.titulo}
 											</p>
 										</div>
 										<div className="flex gap-4 text-sm">
-											<p>{Data()[key].channelName}</p>
+											<p>{item.channel_name}</p>
 											<p>
 												{Math.floor(
 													Math.random() * 10
@@ -121,17 +130,9 @@ function Explorar() {
 								</div>
 							</div>
 						</div>
-						<div></div>
 					</div>
 				))}
 			</div>
-			<button
-				className="bg-gray-800"
-				onClick={() => {
-					clickBtnHandler();
-				}}>
-				Click me
-			</button>
 		</div>
 	);
 }
